@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GatewayOneController;
+use App\Http\Controllers\GatewayTwoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post(
+    '/gatewayOne/changePaymentStatus',
+    [GatewayOneController::class, 'changePaymentStatus']
+)->middleware(['throttle:gwOne', 'gw.one.ensureSignatureIsValid']);
+
+Route::post(
+    '/gatewayTwo/changePaymentStatus',
+    [GatewayTwoController::class, 'changePaymentStatus']
+)->middleware(['throttle:gwTwo', 'gw.two.ensureSignatureIsValid']);
+
